@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
+
 import { motion } from "framer-motion";
+import gsap from "gsap";
 import styles from "./style.module.scss";
 
 const scaleAnimation = {
@@ -21,9 +23,28 @@ const scaleAnimation = {
 
 export default function Modal({ modal, projects }) {
   const { active, index } = modal;
+  const container = useRef(null);
+
+  useEffect(() => {
+    const moveContainerX = gsap.quickTo(container.current, "left", {
+      duration: 0.8,
+      ease: "power3",
+    });
+    const moveContainerY = gsap.quickTo(container.current, "top", {
+      duration: 0.8,
+      ease: "power3",
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      const { clientX, clientY } = e;
+      moveContainerX(clientX);
+      moveContainerY(clientY);
+    });
+  }, []);
 
   return (
     <motion.div
+      ref={container}
       variants={scaleAnimation}
       initial={"initial"}
       animate={active ? "open" : "closed"}
