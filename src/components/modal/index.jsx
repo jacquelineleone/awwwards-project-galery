@@ -1,12 +1,34 @@
 import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import styles from "./style.module.scss";
+
+const scaleAnimation = {
+  initial: { scale: 0, x: "-50%", y: "-50%" },
+  open: {
+    scale: 1,
+    x: "-50%",
+    y: "-50%",
+    transition: { duration: 0.4, ease: [0.76, 0, 0.24, 1] },
+  },
+  closed: {
+    scale: 0,
+    x: "-50%",
+    y: "-50%",
+    transition: { duration: 0.4, ease: [0.32, 0, 0.67, 0] },
+  },
+};
 
 export default function Modal({ modal, projects }) {
   const { active, index } = modal;
 
   return (
-    <div className={styles.container}>
+    <motion.div
+      variants={scaleAnimation}
+      initial={"initial"}
+      animate={active ? "open" : "closed"}
+      className={styles.container}
+    >
       <div style={{ top: index * -100 + "%" }} className={styles.slider}>
         {projects.map((project, index) => {
           const { src, color } = project;
@@ -26,6 +48,6 @@ export default function Modal({ modal, projects }) {
           );
         })}
       </div>
-    </div>
+    </motion.div>
   );
 }
